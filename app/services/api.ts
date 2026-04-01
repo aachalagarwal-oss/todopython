@@ -1,150 +1,90 @@
-import { error } from "console";
+import axios from "axios";
 
-const BASE_URL="http://localhost:8000";
+//kuch bhi repeat na karna ho abr bar use karte time toh add it in create
+const publicApi = axios.create({ baseURL: "http://localhost:8000" });
 
+const privateApi = axios.create({ baseURL: "http://localhost:8000" });
 
-export const loginUser=async (email:string,password:string)=>{
-    try{
-        const response=await fetch(`${BASE_URL}/auth/login`,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-            },
-            body:JSON.stringify({
-                email,
-                password
-            })
-        })
+//use matlab jaha bhi use akrenge woh iss token se hoke jayegi...It acts like a middleware.
+privateApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
 
-        const data=await response.json();
-        if(!response.ok){
-            throw new Error(data.detail || "login failed")
-        }
-        return data;
-    }
-    catch(error){
-       throw error;
-    }
-}
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
+  return config;
+});
+export const loginUser = async (email: string, password: string) => {
+  try {
+    const response = await publicApi.post("/auth/login", {
+      email,
+      password,
+    });
 
-export const posttask=async(title:string,desc:string)=>{
-    const token=localStorage.getItem("token");
-    try{
-        const response=await fetch(`${BASE_URL}/tasks`,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${token}`
-            },
-            body:JSON.stringify({
-                title,
-                description:desc
-            })
-        })
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-        const data=await response.json();
-        if(!response.ok){
-            throw new Error(data.detail || "Can't add your task")
-        }
-        return data
-    }
-    catch(error){
-        throw error;
-    }
-}
+export const posttask = async (title: string, desc: string) => {
+  try {
+    const response = await privateApi.post("/tasks", {
+      title,
+      description: desc,
+    });
 
-export const gettask=async()=>{
-    const token=localStorage.getItem("token");
-    try{
-        const res=await fetch(`${BASE_URL}/tasks`,{
-            method:"GET",
-            headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${token}`
-            },
-            
-        })
-        const datafind=await res.json();
-        if(!res.ok){
-            throw new Error(datafind.detail || "Can't get your task")
-        }
-        return datafind
-    }
-    catch(error){
-        throw error;
-    }
-}
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
+export const gettask = async () => {
+  try {
+    const res = await privateApi.get("/tasks");
 
-export const updatetask=async(id:number,status:string)=>{
-    const token=localStorage.getItem("token")
-    try{
-         const res=await fetch(`${BASE_URL}/tasks/${id}`,{
-        method:"PUT",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization:`Bearer ${token}`
-        },
-        body:JSON.stringify({
-            status:status
-        })
-    })
-    const data=await res.json();
-    if(!res.ok){
-        throw new Error(data.detail || "Can't update your task")
-    }
-    }
-    catch(error){
-        throw error
-    }
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updatetask = async (id: number, status: string) => {
+  try {
+    const res = await privateApi.put(`/tasks/${id}`, {
+        status,
+    });
+   return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateanytask = async (
+  id: number,
+  title: string,
+  description: string,
+) => {
+  try {
+    const res = await privateApi.put(`/tasks/${id}`, {
+        title: title,
+        description: description,
    
-}
+    });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-
-export const updateanytask=async(id:number,title:string,description:string)=>{
-    const token=localStorage.getItem("token")
-    try{
-         const res=await fetch(`${BASE_URL}/tasks/${id}`,{
-        method:"PUT",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization:`Bearer ${token}`
-        },
-        body:JSON.stringify({
-            title:title,
-            description:description
-        })
-    })
-    const data=await res.json();
-    if(!res.ok){
-        throw new Error(data.detail || "Can't update your task")
-    }
-    }
-    catch(error){
-        throw error
-    }
-   
-}
-
-
-export const deletetask=async(id:number)=>{
-    const token=localStorage.getItem("token")
-    try{
-        const res=await fetch(`${BASE_URL}/tasks/${id}`,{
-            method:"DELETE",
-            headers:{
-                "Content-type":"application/json",
-                Authorization:`Bearer ${token}`
-            },
-
-        })
-        const data=await res.json()
-        if(!res.ok){
-            throw new Error(data.detail || "Can't update your task")
-        }
-    }
-    catch(error){
-        throw error
-    }
-}
+export const deletetask = async (id: number) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await privateApi.delete(`/tasks/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

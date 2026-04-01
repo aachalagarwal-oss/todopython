@@ -1,3 +1,8 @@
+
+import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
 type texttypes = {
   labeltext?: string;
   inputtext?: string;
@@ -17,13 +22,13 @@ const InputBox=({
      return (
 
     <div className="">
-      <label className="">{labeltext}</label>
-      <input
+      <Label className="">{labeltext}</Label>
+      <Input
         type={type}
         placeholder={inputtext}
         value={value}
         onChange={(e) => onInputChange?.(e.target.value)}
-      ></input>
+      ></Input>
     </div>
   );
 }

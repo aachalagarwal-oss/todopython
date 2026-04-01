@@ -1,7 +1,19 @@
 import { deletetask, gettask, updateanytask, updatetask } from "./services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { Button } from "@/components/ui/button"
+import Image from 'next/image'
+
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { useTaskStore } from "./store/useTaskStore";
+import { EditIcon } from "lucide-react";
 
 type Task = {
   title: string;
@@ -67,56 +79,54 @@ export default function Taskbox() {
       {data?.map((task, index) => {
         const date = new Date(task.created_at);
         return (
-          <div
-            className="shadow-md rounded-xl p-5 border hover:shadow-lg transition duration-200"
-            key={index}
-          >
-            <div className="border-4 p-4 m-auto gap-6">
+        <Card className="w-full max-w-sm mb-7 bg-gray-50" key={index}>
+             
+              <CardContent>
               <div
-                className={`text-white text-xl font-semibold ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
+                className={`text-xl font-semibold ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
               >
                 {task.title}
               </div>
 
               <div className="flex justify-between items-center">
                 <span
-                  className={`text-white  text-xl font-semibold ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
+                  className={` text-xl font-semibold ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
                 >
                   {task.description}
                 </span>
 
-                <button
+                <Button
                   onClick={() => handleClick(task.id, task.status)}
-                  className=" text-white px-3 py-1 rounded"
+                  className="px-3 py-1 rounded"
                 >
                   ☑
-                </button>
+                </Button>
 
               </div>
 
               <div
-                className={`text-white  text-xl font-semibold ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
+                className={` text-xs font-semibold mb-5 ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
               >
                 Created at : {date.toLocaleDateString()} on{" "}
                 {date.toLocaleTimeString()}
               </div>
 
-              <button
+              <Button
                 onClick={() =>
                   handleUpdateTask(task.id, task.title, task.description)
                 }
-                className=" text-white px-3 py-1 rounded"
+                className="bg-gray-200  px-3 py-1 rounded"
               >
-                Edit
-              </button>
-              <button
+               ✏️
+              </Button>
+              <Button
                 onClick={() => handleDeleteTask(task.id)}
-                className=" text-white px-3 py-1 rounded"
+                className=" bg-gray-200  px-3 py-1 rounded"
               >
-                Delete
-              </button>
-            </div>
-          </div>
+                ❌
+              </Button>
+            </CardContent>
+             </Card>
         );
       })}
     </>

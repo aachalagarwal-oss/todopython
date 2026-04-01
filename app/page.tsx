@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputBox from "./InputBox";
 import { useTaskStore } from "./store/useTaskStore";
+import { Button } from "@/components/ui/button"
 export default function Home() {
  const {email,password,setEmail,setPassword}=useTaskStore();
   const router=useRouter();
@@ -43,7 +44,7 @@ export default function Home() {
         onInputChange={(val) => setPassword(val)}
         type="password"
       />
-      <button onClick={handleClick}>{loginMutation.isPending?"Logging in":"Login"}</button>
+      <Button onClick={handleClick}>{loginMutation.isPending?"Logging in":"Login"}</Button>
     </div>
   );
 }

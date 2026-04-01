@@ -1,7 +1,14 @@
 import InputBox from "./InputBox"
 import { useTaskStore } from "./store/useTaskStore";
 
+type FormData = {
+  title: string
+  desc: string
+}
+
 const AddTodoForm=()=>{
+
+    
 
     const {title,desc ,setTitle,setDesc}=useTaskStore();
     return(
