@@ -20,3 +20,25 @@ const AddTodoForm=()=>{
 }
 
 export default AddTodoForm;
+
+
+
+
+// const AddTodoForm = () => {
+//   const {
+//     register,
+//     setValue,
+//     handleSubmit,
+//     formState: { errors },
+//   } = useForm<FormData>();
+
+//   const { title, desc, setTitle, setDesc } = useTaskStore();
+//   return (
+//     <div>
+//       <InputBox {...register("title")} inputtext="Enter your title" />
+//       <InputBox {...register("desc")} inputtext="Enter description" />
+//     </div>
+//   );
+// };
+
+// export default AddTodoForm;
