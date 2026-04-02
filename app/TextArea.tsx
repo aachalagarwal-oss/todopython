@@ -9,9 +9,6 @@ type texttypes = {
   value?: string;
   onInputChange?: (value: string) => void;
   type?: string;
-  textareatext?:string;
-  valuedesc?:string;
-  ondescChange?: (value:string)=>void;
 };
 
 
@@ -20,23 +17,18 @@ const InputBox=({
   inputtext,
   value,
   onInputChange,
-  type,
-  textareatext,
-  valuedesc,
-  ondescChange
+  type
 }: texttypes)=>{
      return (
 
     <div >
       <Label className="">{labeltext}</Label>
-      {inputtext && <Input className="w-full"
+      <Input className="w-full"
         type={type}
         placeholder={inputtext}
         value={value}
         onChange={(e) => onInputChange?.(e.target.value)}
-      ></Input>}
-      {textareatext && <Textarea className="w-full" value={valuedesc} placeholder={textareatext}
-        onChange={(e) => ondescChange?.(e.target.value)}></Textarea>}
+      ></Input>
     </div>
   );
 }

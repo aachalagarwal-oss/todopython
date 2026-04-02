@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card"
 import { useTaskStore } from "./store/useTaskStore";
 import { EditIcon } from "lucide-react";
+import { toast } from "sonner";
 
 type Task = {
   title: string;
@@ -35,7 +36,7 @@ export default function Taskbox() {
       return updatetask(id, status);
     },
     onSuccess: () => {
-      alert("Updated");
+       toast("Task status updated", { position: "bottom-right" })
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error: any) => {
@@ -49,7 +50,7 @@ export default function Taskbox() {
       return deletetask(id);
     },
     onSuccess: () => {
-      alert(`Task deleted`);
+       toast("Task deleted", { position: "bottom-right" })
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
@@ -79,7 +80,7 @@ export default function Taskbox() {
       {data?.map((task, index) => {
         const date = new Date(task.created_at);
         return (
-        <Card className="w-full max-w-sm mb-7 bg-gray-50" key={index}>
+        <Card className="w-full mb-10 bg-white" key={index}>
              
               <CardContent>
               <div

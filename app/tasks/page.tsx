@@ -1,18 +1,17 @@
 "use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import UpdateTodoForm from "../UpdateTodoForm";
 import AddTodoForm from "../AddTodoform";
 import Taskbox from "../TaskBox";
 import { useTaskStore } from "../store/useTaskStore";
 import { posttask, updateanytask } from "../services/api";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Card,
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -27,8 +26,9 @@ export default function Tasks() {
       return posttask(title, desc);
     },
     onSuccess: (data) => {
+      toast("Todo added", { position: "bottom-right" });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      alert("Task added");
+
       console.log(data);
     },
     onError: (error: any) => {
@@ -49,8 +49,8 @@ export default function Tasks() {
       return updateanytask(id, title, description);
     },
     onSuccess: () => {
+      toast("Task updated", { position: "bottom-right" })
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      alert("Task updated");
     },
   });
 
@@ -65,12 +65,15 @@ export default function Tasks() {
     reset();
   };
   return (
-    <div className=" w-100 center flex flex-col border-4 p-4 m-auto bg-[#EFE9E3] ">
-      <div className="p-2 flex flex-col">
-        <div>
-          <CardHeader>
-            <CardTitle >Todo Manager</CardTitle>
-            <CardDescription>Manage your todos here</CardDescription>
+    <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[50%] xl:w-[50%] mx-auto px-4 sm:px-6 md:px-8 py-6 
+flex flex-col rounded-2xl  bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 shadow-xls border-2">
+      <div className="p-2 flex flex-col ">
+        <div className="flex items-center justify-between">
+          <CardHeader className="text-center w-full">
+            <CardTitle className=" text-black dark:text-white text-xl md:text-2xl">Todo Manager</CardTitle>
+            <CardDescription className="text-black dark:text-white">
+              Manage your todos here
+            </CardDescription>
           </CardHeader>
           <ModeToggle />
         </div>
@@ -81,12 +84,15 @@ export default function Tasks() {
         {isEditing ? (
           <Button
             onClick={handleUpdateClick}
-            className="border-3 bg-[#444546] mb-5"
+            className="border-3 bg-[#38bdf8] mb-5 w-full"
           >
             + Update Todo
           </Button>
         ) : (
-          <Button onClick={handleClick} className="border-3  bg-[#444546] mb-5">
+          <Button
+            onClick={handleClick}
+            className="border-3  bg-[#38bdf8] mb-5 w-full"
+          >
             + Add Todo
           </Button>
         )}
