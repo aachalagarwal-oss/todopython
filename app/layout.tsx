@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
 const [queryClient]=useState (()=>new QueryClient());
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <QueryClientProvider client={queryClient}>
            <ThemeProvider

@@ -1,7 +1,12 @@
+"use client";
+
 import { deletetask, gettask, updateanytask, updatetask } from "./services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button"
-import Image from 'next/image'
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { hover } from "motion"
+import { useRef, useEffect } from "react"
 
 import {
   Card,
@@ -11,7 +16,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import { useTaskStore } from "./store/useTaskStore";
 import { EditIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -23,8 +28,9 @@ type Task = {
   created_at: string;
   status: string;
 };
+
 export default function Taskbox() {
-  const {setTitle,setDesc,setEditing}=useTaskStore();
+  const { setTitle, setDesc, setEditing } = useTaskStore();
 
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery<Task[]>({
@@ -36,7 +42,7 @@ export default function Taskbox() {
       return updatetask(id, status);
     },
     onSuccess: () => {
-       toast("Task status updated", { position: "bottom-right" })
+      toast("Task status updated", { position: "bottom-right" });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error: any) => {
@@ -44,13 +50,12 @@ export default function Taskbox() {
     },
   });
 
-
   const deletemutate = useMutation({
     mutationFn: (id: number) => {
       return deletetask(id);
     },
     onSuccess: () => {
-       toast("Task deleted", { position: "bottom-right" })
+      toast("Task deleted", { position: "bottom-right" });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
@@ -61,7 +66,6 @@ export default function Taskbox() {
       setDesc(description);
       setEditing(id);
     }
-   
   }
   function handleClick(id: number, status: string) {
     mutate.mutate({
@@ -77,12 +81,23 @@ export default function Taskbox() {
   if (isError) return <div>Error..</div>;
   return (
     <>
+
+     
       {data?.map((task, index) => {
         const date = new Date(task.created_at);
         return (
-        <Card className="w-full mb-10 bg-white" key={index}>
-             
-              <CardContent>
+          <>
+           <motion.div
+        whileHover={{
+          scale: 1.1,
+          // Will be used when gesture starts
+          transition: { duration: 0.1 },
+        }}
+        // Will be used when gesture ends
+        transition={{ duration: 0.5 }}
+      >
+          <Card className="w-full mb-10 bg-white" key={index}>
+            <CardContent>
               <div
                 className={`text-xl font-semibold ${task.status == "completed" ? "line-through text-gray-400" : "text-black"}`}
               >
@@ -102,7 +117,6 @@ export default function Taskbox() {
                 >
                   ☑
                 </Button>
-
               </div>
 
               <div
@@ -118,7 +132,7 @@ export default function Taskbox() {
                 }
                 className="bg-gray-200  px-3 py-1 rounded"
               >
-               ✏️
+                ✏️
               </Button>
               <Button
                 onClick={() => handleDeleteTask(task.id)}
@@ -127,7 +141,9 @@ export default function Taskbox() {
                 ❌
               </Button>
             </CardContent>
-             </Card>
+          </Card>
+          </motion.div>
+          </>
         );
       })}
     </>
